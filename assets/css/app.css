@@ -3688,3 +3688,41 @@ footer .footer-wrapper .footer-gallery ul li img {
 }
 
 /*# sourceMappingURL=app.css.map */
+
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: "Inter", sans-serif
+}
+#preloader {
+	background-color: #f9a100;
+	/* color: #f9a100; */
+}
+#preloader .loading {
+	font-family: "Inter", sans-serif
+}
+h1 {
+	font-size: 44px;
+}
+footer .footer-wrapper {
+	margin-top: 0;
+	padding: 30px 0;
+}
+.banner-block-1{
+	width: 100%;
+	background: rgb(145 145 145 / 62%);
+}
+.hero-banner .banner-wrapper .block-wrapper .banner-block-1 {
+	width: 70%;
+	floar: right;
+}
+.services-section .service-card .service-text h4 {
+	font-size: 24px;
+}
+@media (max-width: 767px) {
+	h1 {
+		font-size: 27px;
+	}
+	.sustainability-block, .logo-block {
+		display: none;
+	}
+}
