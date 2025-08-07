@@ -1844,7 +1844,7 @@ label.error {
   position: relative;
 }
 .header .navigation .header-logo {
-  width: clamp(64px, 5.313vw, 360px);
+  width: clamp(64px, 8.313vw, 360px);
 }
 @media (max-width: 1024px) {
   .header .navigation .header-logo {
@@ -3726,3 +3726,11 @@ footer .footer-wrapper {
 		display: none;
 	}
 }
+
+/* @media (max-width: 580px) {
+    .header {
+		position: fixed;
+        padding: 16px 0;
+		background-color: black;
+    }
+} */

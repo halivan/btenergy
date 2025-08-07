@@ -279,7 +279,6 @@ var MyScroll = "";
         $("." + $this).slick("slickNext");
       });
     },
-    
     formValidation: function () {
       if ($(".blog-form").length) {
         $(".blog-form").validate();
@@ -329,3 +328,23 @@ var MyScroll = "";
   };
   Init.i();
 })(window, document, jQuery);
+
+
+$('.navigation a').on('click', function (e) {
+	const href = $(this).attr('href');
+
+	if (href.startsWith('#')) {
+		e.preventDefault();
+
+		const target = $(href);
+		if (target.length) {
+			$('html, body').animate({
+				scrollTop: target.offset().top
+			}, 300);
+		}
+	}
+});
+
+$('.mobile-nav__wrapper').on('click', '.main-menu__list a', function (e) {
+	$(".mobile-nav__close").trigger('click');
+});
