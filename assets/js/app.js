@@ -280,55 +280,102 @@ var MyScroll = "";
       });
     },
     formValidation: function () {
-      if ($(".blog-form").length) {
-        $(".blog-form").validate();
-      }
+	  $.validator.addMethod("phoneUA", function(value, element) {
+	    return this.optional(element) || /^\+38\s?0\d{2}\s?\d{3}\s?\d{2}\s?\d{2}$/.test(value);
+	  }, "Введіть коректний номер телефону");
+			
       if ($(".contact-form").length) {
-        $(".contact-form").validate();
+		$(".contact-form").validate({
+			rules: {
+				name: {
+					required: true,
+					minlength: 2
+				},
+				last_name: {
+					minlength: 2
+				},
+				email: {
+					required: true,
+					email: true
+				},
+				phone: {
+					required: true,
+					phoneUA: true
+				},
+				message: {
+					required: true,
+					minlength: 10
+				}
+			},
+			messages: {
+				name: {
+					required: "Введіть ім'я",
+					minlength: "Мінімум 2 символи"
+				},
+				last_name: {
+					minlength: "Мінімум 2 символи"
+				},
+				email: {
+					required: "Введіть email",
+					email: "Некоректний email"
+				},
+				phone: {
+					required: "Введіть номер телефону",
+					phoneUA: "Формат: +38 0XX XXX XX XX"
+				},
+				message: {
+					required: "Введіть повідомлення",
+					minlength: "Мінімум 10 символів"
+				}
+			}
+		});
       }
     },
     contactForm: function () {
-      $(".contact-form").on("submit", function (e) {
-        e.preventDefault();
-        if ($(".contact-form").valid()) {
-          var _self = $(this);
-          _self
-            .closest("div")
-            .find('button[type="submit"]')
-            .attr("disabled", "disabled");
-          var data = $(this).serialize();
-          $.ajax({
-            url: "./assets/mail/contact.php",
-            type: "post",
-            dataType: "json",
-            data: data,
-            success: function (data) {
-              $(".contact-form").trigger("reset");
-              _self.find('button[type="submit"]').removeAttr("disabled");
-              if (data.success) {
-                document.getElementById("message").innerHTML =
-                  "<h6 class='color-primary mt-16 mb-16'>Email Sent Successfully</h6>";
-              } else {
-                document.getElementById("message").innerHTML =
-                  "<h6 class='color-primary mt-16 mb-16'>There is an error</h6>";
-              }
-              $("#messages").show("slow");
-              $("#messages").slideDown("slow");
-              setTimeout(function () {
-                $("#messages").slideUp("hide");
-                $("#messages").hide("slow");
-              }, 4000);
-            },
-          });
-        } else {
-          return !1;
-        }
-      });
-    },
+		emailjs.init({publicKey: "KqNzZT6ISh9sFMsjz"});
+		
+		document.getElementById('contact-form').addEventListener('submit', function(event) {
+			event.preventDefault();
+			
+			if ($(".contact-form").valid()) {
+				var _self = $(this);
+				_self
+					.closest("div")
+					.find('button[type="submit"]')
+					.attr("disabled", "disabled");
+			  
+				emailjs.sendForm('service_4ut6h2p', 'template_muny4x4', this)
+					.then(() => {
+						$(".contact-form").trigger("reset");
+						_self.find('button[type="submit"]').removeAttr("disabled");
+						
+						document.getElementById("messages").innerHTML = "";
+						
+						$("#contact-form").replaceWith("<h6 class='mt-16 mb-16'>Дякуємо. Електронний лист успішно надіслано. Ми відповімо вам найближчим часом.</h6>");
+					}, (error) => {
+						console.log('FAILED...', error);
+						
+						_self.find('button[type="submit"]').removeAttr("disabled");
+						
+						document.getElementById("messages").innerHTML = "<h6 class='mt-16 mb-16' style='color: #ff0000;'>Виникла помилка. Спробуйте прохи пізніше.</h6>";
+						
+						$("#messages").show("slow");
+						$("#messages").slideDown("slow");
+						
+						setTimeout(function () {
+							$("#messages").slideUp("hide");
+							$("#messages").hide("slow");
+						}, 4000);
+					});
+			}
+			else {
+			  return !1;
+			}
+		});
+    }
   };
   Init.i();
 })(window, document, jQuery);
-
 
 $('.navigation a').on('click', function (e) {
 	const href = $(this).attr('href');

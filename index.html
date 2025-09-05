@@ -730,7 +730,8 @@
                     <div class="col-xl-6 col-lg-6 wow fadeInRight animated" data-wow-delay="400ms">
                         <div class="contact-form-container">
                             <h3 class="fw-500 light-black mb-36">Залиште нам повідомлення</h3>
-                            <form action="#contacts" method="post" class="contact-form">
+							<div id="messages" style="display: none"></div>
+                            <form action="#contacts" method="post" class="contact-form" id="contact-form">
                                 <div class="row row-gap-4">
                                     <div class="col-md-6">
                                         <div class="input-block">
@@ -741,13 +742,13 @@
                                     <div class="col-md-6">
                                         <div class="input-block">
                                             <label for="last_name" class="mb-8">Прізвище</label>
-                                            <input type="text" class="form-control" id="last_name" name="last_name" required placeholder="Прізвище">
+                                            <input type="text" class="form-control" id="last_name" name="last_name" placeholder="Прізвище">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="input-block">
                                             <label for="email" class="mb-8">Email</label>
-                                            <input type="email" class="form-control" id="email" name="email" required placeholder="me@gmail.com">
+                                            <input type="email" class="form-control" id="email" name="email" placeholder="me@gmail.com">
                                         </div>
                                     </div>
                                     <div class="col-md-12">
@@ -925,8 +926,10 @@
     <script src="assets/js/vendor/slick.min.js"></script>
     <script src="assets/js/vendor/jquery-validator.js"></script>
     <script src="assets/js/vendor/wow.js"></script>
+	
+	<script type="text/javascript" src="assets/js/email.min.js"></script>
 
-    <script src="assets/js/app.js"></script>
+    <script src="assets/js/app.js?v1.1"></script>
 </body>
 
 </html>
