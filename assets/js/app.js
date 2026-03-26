@@ -59,43 +59,47 @@ var MyScroll = "";
     },
     header: function () {
       function dynamicCurrentMenuClass(menu) {
-		let currentPath = window.location.pathname.split("/").pop();
-		let currentHash = window.location.hash;
-		
-		menu.find("a").each(function () {
-		  let href = $(this).attr("href");
+        let currentPath = window.location.pathname.split("/").pop();
+        let currentHash = window.location.hash;
+        
+        menu.find("a").each(function () {
+          let href = $(this).attr("href");
 
-		  // for .html
-		  if (href === currentPath && currentPath !== "") {
-			menu.find("a").removeClass("active");
-			$(this).addClass("active");
-		  }
+          // for .html
+          if (href === currentPath && currentPath !== "") {
+            menu.find("a").removeClass("active");
+            $(this).addClass("active");
+          }
 
-		  // for #
-		  if (href === currentHash) {
-			menu.find("a").removeClass("active");
-			$(this).addClass("active");
-		  }
+          // for #
+          if (href === currentHash) {
+            menu.find("a").removeClass("active");
+            $(this).addClass("active");
+          }
 
-		  // index
-		  if (
-			(currentPath === "" || currentPath === "index.html") &&
-			href === "/"
-		  ) {
-			menu.find("a").removeClass("active");
-			$(this).addClass("active");
-		  }
-		});
-	  }
+          // index
+          if (
+            (currentPath === "" || currentPath === "index.html") &&
+            href === "/"
+          ) {
+            menu.find("a").removeClass("active");
+            $(this).addClass("active");
+          }
+        });
+      }
       if ($(".main-menu__list").length) {
         let mainNavUL = $(".main-menu__list");
         
-		dynamicCurrentMenuClass(mainNavUL);
-		
-		mainNavUL.find("a").on("click", function () {
-		  mainNavUL.find("a").removeClass("active");
-		  $(this).addClass("active");
-		});
+        dynamicCurrentMenuClass(mainNavUL);
+        
+        mainNavUL.find("a").on("click", function () {
+          mainNavUL.find("a").removeClass("active");
+          $(this).addClass("active");
+        });
+        
+        $(window).on("hashchange", function() {
+            dynamicCurrentMenuClass(mainNavUL);
+        });
       }
       if ($(".main-menu__nav").length && $(".mobile-nav__container").length) {
         let navContent = document.querySelector(".main-menu__nav").innerHTML;
@@ -298,118 +302,118 @@ var MyScroll = "";
       });
     },
     formValidation: function () {
-	  $.validator.addMethod("phoneUA", function(value, element) {
-	    return this.optional(element) || /^\+38\s?0\d{2}\s?\d{3}\s?\d{2}\s?\d{2}$/.test(value);
-	  }, "Введіть коректний номер телефону");
-			
+      $.validator.addMethod("phoneUA", function(value, element) {
+        return this.optional(element) || /^\+38\s?0\d{2}\s?\d{3}\s?\d{2}\s?\d{2}$/.test(value);
+      }, "Введіть коректний номер телефону");
+            
       if ($(".contact-form").length) {
-		$(".contact-form").validate({
-			rules: {
-				name: {
-					required: true,
-					minlength: 2
-				},
-				last_name: {
-					minlength: 2
-				},
-				email: {
-					required: true,
-					email: true
-				},
-				phone: {
-					required: true,
-					phoneUA: true
-				},
-				message: {
-					required: true,
-					minlength: 10
-				}
-			},
-			messages: {
-				name: {
-					required: "Введіть ім'я",
-					minlength: "Мінімум 2 символи"
-				},
-				last_name: {
-					minlength: "Мінімум 2 символи"
-				},
-				email: {
-					required: "Введіть email",
-					email: "Некоректний email"
-				},
-				phone: {
-					required: "Введіть номер телефону",
-					phoneUA: "Формат: +38 0XX XXX XX XX"
-				},
-				message: {
-					required: "Введіть повідомлення",
-					minlength: "Мінімум 10 символів"
-				}
-			}
-		});
+        $(".contact-form").validate({
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 2
+                },
+                last_name: {
+                    minlength: 2
+                },
+                email: {
+                    required: true,
+                    email: true
+                },
+                phone: {
+                    required: true,
+                    phoneUA: true
+                },
+                message: {
+                    required: true,
+                    minlength: 10
+                }
+            },
+            messages: {
+                name: {
+                    required: "Введіть ім'я",
+                    minlength: "Мінімум 2 символи"
+                },
+                last_name: {
+                    minlength: "Мінімум 2 символи"
+                },
+                email: {
+                    required: "Введіть email",
+                    email: "Некоректний email"
+                },
+                phone: {
+                    required: "Введіть номер телефону",
+                    phoneUA: "Формат: +38 0XX XXX XX XX"
+                },
+                message: {
+                    required: "Введіть повідомлення",
+                    minlength: "Мінімум 10 символів"
+                }
+            }
+        });
       }
     },
     contactForm: function () {
-		emailjs.init({publicKey: "KqNzZT6ISh9sFMsjz"});
-		
-		document.getElementById('contact-form').addEventListener('submit', function(event) {
-			event.preventDefault();
-			
-			if ($(".contact-form").valid()) {
-				var _self = $(this);
-				_self
-					.closest("div")
-					.find('button[type="submit"]')
-					.attr("disabled", "disabled");
-			  
-				emailjs.sendForm('service_4ut6h2p', 'template_muny4x4', this)
-					.then(() => {
-						$(".contact-form").trigger("reset");
-						_self.find('button[type="submit"]').removeAttr("disabled");
-						
-						document.getElementById("messages").innerHTML = "";
-						
-						$("#contact-form").replaceWith("<h6 class='mt-16 mb-16'>Дякуємо. Електронний лист успішно надіслано. Ми відповімо вам найближчим часом.</h6>");
-					}, (error) => {
-						console.log('FAILED...', error);
-						
-						_self.find('button[type="submit"]').removeAttr("disabled");
-						
-						document.getElementById("messages").innerHTML = "<h6 class='mt-16 mb-16' style='color: #ff0000;'>Виникла помилка. Спробуйте прохи пізніше.</h6>";
-						
-						$("#messages").show("slow");
-						$("#messages").slideDown("slow");
-						
-						setTimeout(function () {
-							$("#messages").slideUp("hide");
-							$("#messages").hide("slow");
-						}, 4000);
-					});
-			}
-			else {
-			  return !1;
-			}
-		});
+        emailjs.init({publicKey: "KqNzZT6ISh9sFMsjz"});
+        
+        document.getElementById('contact-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            if ($(".contact-form").valid()) {
+                var _self = $(this);
+                _self
+                    .closest("div")
+                    .find('button[type="submit"]')
+                    .attr("disabled", "disabled");
+              
+                emailjs.sendForm('service_4ut6h2p', 'template_muny4x4', this)
+                    .then(() => {
+                        $(".contact-form").trigger("reset");
+                        _self.find('button[type="submit"]').removeAttr("disabled");
+                        
+                        document.getElementById("messages").innerHTML = "";
+                        
+                        $("#contact-form").replaceWith("<h6 class='mt-16 mb-16'>Дякуємо. Електронний лист успішно надіслано. Ми відповімо вам найближчим часом.</h6>");
+                    }, (error) => {
+                        console.log('FAILED...', error);
+                        
+                        _self.find('button[type="submit"]').removeAttr("disabled");
+                        
+                        document.getElementById("messages").innerHTML = "<h6 class='mt-16 mb-16' style='color: #ff0000;'>Виникла помилка. Спробуйте прохи пізніше.</h6>";
+                        
+                        $("#messages").show("slow");
+                        $("#messages").slideDown("slow");
+                        
+                        setTimeout(function () {
+                            $("#messages").slideUp("hide");
+                            $("#messages").hide("slow");
+                        }, 4000);
+                    });
+            }
+            else {
+              return !1;
+            }
+        });
     }
   };
   Init.i();
 })(window, document, jQuery);
 
 $('.navigation a').on('click', function (e) {
-	const href = $(this).attr('href');
+    const href = $(this).attr('href');
 
-	if (href.startsWith('#')) {
-		e.preventDefault();
+    if (href.startsWith('#')) {
+        e.preventDefault();
 
-		const target = $(href);
-		if (target.length) {
-			$('html, body').animate({
-				scrollTop: target.offset().top
-			}, 300);
-		}
-	}
+        const target = $(href);
+        if (target.length) {
+            $('html, body').animate({
+                scrollTop: target.offset().top
+            }, 300);
+        }
+    }
 });
 
 $('.mobile-nav__wrapper').on('click', '.main-menu__list a', function (e) {
-	$(".mobile-nav__close").trigger('click');
+    $(".mobile-nav__close").trigger('click');
 });
