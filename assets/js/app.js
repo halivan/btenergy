@@ -58,26 +58,44 @@ var MyScroll = "";
       }, 1800);
     },
     header: function () {
-      function dynamicCurrentMenuClass(selector) {
-        let FileName = window.location.href.split("/").reverse()[0];
-        selector.find("li").each(function () {
-          let anchor = $(this).find("a");
-          if ($(anchor).attr("href") == FileName) {
-            $(this).addClass("current");
-          }
-        });
-        selector.children("li").each(function () {
-          if ($(this).find(".current").length) {
-            $(this).addClass("current");
-          }
-        });
-        if ("" == FileName) {
-          selector.find("li").eq(0).addClass("current");
-        }
-      }
+      function dynamicCurrentMenuClass(menu) {
+		let currentPath = window.location.pathname.split("/").pop();
+		let currentHash = window.location.hash;
+		
+		menu.find("a").each(function () {
+		  let href = $(this).attr("href");
+
+		  // for .html
+		  if (href === currentPath && currentPath !== "") {
+			menu.find("a").removeClass("active");
+			$(this).addClass("active");
+		  }
+
+		  // for #
+		  if (href === currentHash) {
+			menu.find("a").removeClass("active");
+			$(this).addClass("active");
+		  }
+
+		  // index
+		  if (
+			(currentPath === "" || currentPath === "index.html") &&
+			href === "/"
+		  ) {
+			menu.find("a").removeClass("active");
+			$(this).addClass("active");
+		  }
+		});
+	  }
       if ($(".main-menu__list").length) {
         let mainNavUL = $(".main-menu__list");
-        dynamicCurrentMenuClass(mainNavUL);
+        
+		dynamicCurrentMenuClass(mainNavUL);
+		
+		mainNavUL.find("a").on("click", function () {
+		  mainNavUL.find("a").removeClass("active");
+		  $(this).addClass("active");
+		});
       }
       if ($(".main-menu__nav").length && $(".mobile-nav__container").length) {
         let navContent = document.querySelector(".main-menu__nav").innerHTML;
